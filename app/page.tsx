@@ -1,103 +1,193 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger, SplitText } from "gsap/all";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
+
+export default function Page() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLButtonElement>(null);
+  const shapesRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero section entrance animation
+      const tl = gsap.timeline();
+      
+      // Animate title with SplitText
+      const splitTitle = new SplitText(titleRef.current!, { type: "chars,words" });
+      tl.from(splitTitle.chars, {
+        duration: 1,
+        y: 100,
+        opacity: 0,
+        stagger: 0.05,
+        ease: "back.out(1.7)"
+      });
+
+      // Animate subtitle
+      tl.from(subtitleRef.current, {
+        duration: 0.8,
+        y: 50,
+        opacity: 0,
+        ease: "power2.out"
+      }, "-=0.5");
+
+      // Animate CTA button
+      tl.from(ctaRef.current, {
+        duration: 0.6,
+        scale: 0,
+        opacity: 0,
+        ease: "back.out(1.7)"
+      }, "-=0.3");
+
+      // Floating shapes animation
+      gsap.to(".floating-shape", {
+        duration: 3,
+        y: "-=20",
+        rotation: 360,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+        stagger: 0.5
+      });
+
+      // Continuous rotation for shapes
+      gsap.to(".rotating-shape", {
+        duration: 10,
+        rotation: 360,
+        repeat: -1,
+        ease: "none"
+      });
+
+      // Cards scroll animation
+      gsap.from(".feature-card", {
+        scrollTrigger: {
+          trigger: cardsRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse"
+        },
+        duration: 0.8,
+        y: 100,
+        opacity: 0,
+        stagger: 0.2,
+        ease: "power2.out"
+      });
+
+      // Parallax effect for shapes
+      gsap.to(".parallax-shape", {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1
+        },
+        y: -100,
+        ease: "none"
+      });
+
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden">
+      {/* Floating background shapes */}
+      <div ref={shapesRef} className="fixed inset-0 pointer-events-none">
+        <div className="floating-shape absolute top-20 left-10 w-24 h-24 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full opacity-20"></div>
+        <div className="floating-shape absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-lg opacity-30 rotating-shape"></div>
+        <div className="floating-shape absolute bottom-40 left-20 w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full opacity-25"></div>
+        <div className="floating-shape parallax-shape absolute top-60 right-10 w-32 h-32 bg-gradient-to-r from-green-400 to-teal-400 rounded-lg opacity-15 rotating-shape"></div>
+        <div className="floating-shape parallax-shape absolute bottom-20 right-40 w-28 h-28 bg-gradient-to-r from-red-400 to-pink-400 rounded-full opacity-20"></div>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Hero Section */}
+      <div ref={heroRef} className="relative z-10 flex-center min-h-screen px-6">
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 
+            ref={titleRef}
+            className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent mb-6"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            GSAP Magic
+          </h1>
+          <p 
+            ref={subtitleRef}
+            className="text-xl md:text-2xl text-blue-100 mb-8 max-w-2xl mx-auto"
           >
-            Read our docs
-          </a>
+            Experience the power of smooth animations and interactive design with GreenSock Animation Platform
+          </p>
+          <button 
+            ref={ctaRef}
+            className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-full text-lg hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-purple-500/25"
+          >
+            Explore Animations
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* Feature Cards Section */}
+      <div ref={cardsRef} className="relative z-10 py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center text-white mb-16">
+            Animation Features
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="feature-card bg-white/10 backdrop-blur-lg rounded-xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg mb-6 flex items-center justify-center">
+                <span className="text-2xl">⚡</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-4">High Performance</h3>
+              <p className="text-blue-100">Smooth 60fps animations optimized for all devices and browsers</p>
+            </div>
+            
+            <div className="feature-card bg-white/10 backdrop-blur-lg rounded-xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-lg mb-6 flex items-center justify-center">
+                <span className="text-2xl">🎨</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-4">Creative Control</h3>
+              <p className="text-blue-100">Endless possibilities with timelines, morphing, and advanced easing</p>
+            </div>
+            
+            <div className="feature-card bg-white/10 backdrop-blur-lg rounded-xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-teal-400 rounded-lg mb-6 flex items-center justify-center">
+                <span className="text-2xl">🚀</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-4">Easy Integration</h3>
+              <p className="text-blue-100">Simple API that works perfectly with React and modern frameworks</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Interactive Section */}
+      <div className="relative z-10 py-20 px-6 bg-black/20">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold text-white mb-8">
+            Interactive Elements
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div 
+                key={i}
+                className="interactive-box w-24 h-24 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg cursor-pointer hover:scale-110 hover:rotate-12 transition-all duration-300 mx-auto"
+                onMouseEnter={(e) => {
+                  gsap.to(e.target, { duration: 0.3, scale: 1.2, rotation: 15 });
+                }}
+                onMouseLeave={(e) => {
+                  gsap.to(e.target, { duration: 0.3, scale: 1, rotation: 0 });
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
