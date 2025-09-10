@@ -4,9 +4,13 @@ import { SplitText, ScrollTrigger } from "gsap/all";
 import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useRef, useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
+
 gsap.registerPlugin(SplitText, ScrollTrigger);
 const Hero = () => {
+  const videoRef = useRef();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
   useGSAP(() => {
     const heroSplit = new SplitText(".title", { type: "chars, words" });
     const paragraphSplit = new SplitText(".subtitle", { type: "lines" });
@@ -40,6 +44,49 @@ const Hero = () => {
       })
       .to(".right-leaf", { y: 200 }, 0)
       .to(".left-leaf", { y: -200 }, 0);
+  }, []);
+
+  // Separate useEffect for video animation to ensure proper timing
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleLoadedMetadata = () => {
+      const startValue = isMobile ? "top 50%" : "center 60%";
+      const endValue = isMobile ? "120% top" : "bottom top";
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: video, // Use the actual video element as trigger
+            start: startValue,
+            end: endValue,
+            scrub: true,
+            pin: true,
+          },
+        })
+        .to(video, {
+          currentTime: video.duration,
+          ease: "none", // Essential for smooth scrubbing
+        });
+    };
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    // Check if metadata is already loaded (in case of cache)
+    if (video.readyState >= 1) {
+      handleLoadedMetadata();
+    }
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      // Clean up ScrollTriggers for this video
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.trigger === video) {
+          trigger.kill();
+        }
+      });
+    };
   }, []);
   return (
     <>
@@ -79,6 +126,16 @@ const Hero = () => {
           </div>
         </div>
       </section>
+      <div className="video absolute inset-0">
+        <video
+          ref={videoRef}
+          src="/videos/output.mp4"
+          muted
+          playsInline
+          preload="auto"
+          className="video"
+        />
+      </div>
     </>
   );
 };

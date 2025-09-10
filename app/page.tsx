@@ -1,20 +1,20 @@
-// "use client";
-import React from "react";
-//GSAP
-// import { ScrollTrigger, SplitText } from "gsap/all";
-//components
+"use client";
 import Navbar from "@/components/Navbar";
-import gsap from "gsap";
 import Hero from "@/components/Hero";
+import Cocktails from "@/components/Cocktails";
+import gsap from "gsap";
+import { ScrollTrigger, SplitText } from "gsap/all";
 
-const page = () => {
+gsap.registerPlugin(ScrollTrigger, SplitText);
+
+const App = () => {
   return (
     <main>
       <Navbar />
       <Hero />
-      <div className="h-dvh bg-black"></div>
+      <Cocktails />
     </main>
   );
 };
 
-export default page;
+export default App;
