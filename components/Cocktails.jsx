@@ -1,9 +1,12 @@
-// "use client";
+"use client";
 import Image from "next/image";
 import React from "react";
 import { cocktailLists, mockTailLists } from "@/constants/index";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/all";
+
+gsap.registerPlugin(ScrollTrigger);
 const Cocktails = () => {
   useGSAP(() => {
     const parallaxTimeline = gsap.timeline({
