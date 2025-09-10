@@ -70,54 +70,59 @@ const About = () => {
       </div>
       <div className="top-grid">
         <div className="md:col-span-3">
-          <div className="noisy" />
           <Image
             src="/images/abt1.png"
             alt="grid-img-1"
-            height={100}
-            width={100}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
+          <div className="noisy z-10" />
         </div>
 
         <div className="md:col-span-6">
-          <div className="noisy" />
           <Image
             src="/images/abt2.png"
             alt="grid-img-2"
-            height={100}
-            width={100}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
           />
+          <div className="noisy z-10" />
         </div>
 
         <div className="md:col-span-3">
-          <div className="noisy" />
           <Image
             src="/images/abt5.png"
             alt="grid-img-5"
-            height={100}
-            width={100}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
+          <div className="noisy z-10" />
         </div>
       </div>
       <div className="bottom-grid">
         <div className="md:col-span-8">
-          <div className="noisy" />
           <Image
             src="/images/abt3.png"
             alt="grid-img-3"
-            height={100}
-            width={100}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
           />
+          <div className="noisy z-10" />
         </div>
 
         <div className="md:col-span-4">
-          <div className="noisy" />
           <Image
             src="/images/abt4.png"
             alt="grid-img-4"
-            height={100}
-            width={100}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
           />
+          <div className="noisy z-10" />
         </div>
       </div>
     </div>
