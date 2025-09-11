@@ -46,16 +46,12 @@ const Menu = () => {
   const nextCocktail = getCocktailAt(1);
 
   return (
-    <section
-      id="menu"
-      aria-labelledby="menu-heading"
-      className="overflow-x-hidden"
-    >
+    <section id="menu" aria-labelledby="menu-heading">
       <Image
         src="/images/slider-left-leaf.png"
         alt="left-leaf"
         id="m-left-leaf"
-        width={300}
+        width={200}
         height={100}
       />
       <Image
